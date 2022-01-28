@@ -21,6 +21,9 @@ on:
     paths:
       - '**'
       - '!**.md'
+  push:
+    branches:
+      - iotdb_test
   schedule:
     - cron: '0 18 * * *'
 
