@@ -21,6 +21,7 @@ package org.apache.skywalking.oap.server.storage.plugin.iotdb.base;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.skywalking.oap.server.core.alarm.AlarmRecord;
 import org.apache.skywalking.oap.server.core.analysis.TimeBucket;
@@ -33,6 +34,7 @@ import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.request.InsertRequest;
 
+@Slf4j
 @RequiredArgsConstructor
 public class IoTDBRecordDAO implements IRecordDAO {
     private final StorageHashMapBuilder<Record> storageBuilder;
@@ -48,11 +50,13 @@ public class IoTDBRecordDAO implements IRecordDAO {
         List<Object> measurementValues = request.getMeasurementValues();
         List<Tag> rawTags = null;
         if (SegmentRecord.INDEX_NAME.equals(model.getName())) {
+            log.info("Prepare SegmentRecord insert: {}", record);
             rawTags = ((SegmentRecord) record).getTagsRawData();
             measurementTypes.remove(measurements.indexOf(SegmentRecord.TAGS));
             measurementValues.remove(measurements.indexOf(SegmentRecord.TAGS));
             measurements.remove(SegmentRecord.TAGS);
         } else if (LogRecord.INDEX_NAME.equals(model.getName())) {
+            log.info("Prepare LogRecord insert: {}", record);
             rawTags = ((LogRecord) record).getTags();
             measurementTypes.remove(measurements.indexOf(LogRecord.TAGS));
             measurementValues.remove(measurements.indexOf(LogRecord.TAGS));

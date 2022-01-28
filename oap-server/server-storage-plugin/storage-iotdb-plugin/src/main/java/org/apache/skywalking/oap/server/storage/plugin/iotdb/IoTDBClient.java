@@ -109,6 +109,7 @@ public class IoTDBClient implements Client, HealthCheckable {
      * @throws IOException IoTDBConnectionException or StatementExecutionException
      */
     public void write(IoTDBInsertRequest request) throws IOException {
+        log.info("Writing data to IoTDB: {}", request);
         if (log.isDebugEnabled()) {
             log.debug("Writing data to IoTDB: {}", request);
         }
@@ -123,6 +124,7 @@ public class IoTDBClient implements Client, HealthCheckable {
             }
             sessionPool.insertRecord(devicePath.toString(), request.getTime(),
                     request.getMeasurements(), request.getMeasurementTypes(), request.getMeasurementValues());
+            log.info("After Writing data to IoTDB: {}", request);
             healthChecker.health();
         } catch (IoTDBConnectionException | StatementExecutionException e) {
             healthChecker.unHealth(e);
@@ -137,6 +139,9 @@ public class IoTDBClient implements Client, HealthCheckable {
      * @throws IOException IoTDBConnectionException or StatementExecutionException
      */
     public void write(List<IoTDBInsertRequest> requestList) throws IOException {
+        for (IoTDBInsertRequest request : requestList) {
+            log.info("Writing data to IoTDB: {}", request);
+        }
         if (log.isDebugEnabled()) {
             for (IoTDBInsertRequest request : requestList) {
                 log.debug("Writing data to IoTDB: {}", request);
@@ -167,6 +172,7 @@ public class IoTDBClient implements Client, HealthCheckable {
         try {
             sessionPool.insertRecords(devicePathList, timeList, timeseriesListList, typesList, valuesList);
             healthChecker.health();
+            log.info("After Writing data to IoTDB: {}", requestList);
         } catch (IoTDBConnectionException | StatementExecutionException e) {
             healthChecker.unHealth(e);
             throw new IOException(e);
@@ -192,6 +198,7 @@ public class IoTDBClient implements Client, HealthCheckable {
         List<? super StorageData> storageDataList = new ArrayList<>();
         try {
             wrapper = sessionPool.executeQueryStatement(querySQL);
+            log.info("SQL: {}, columnNames: {}", querySQL, wrapper.getColumnNames());
             if (log.isDebugEnabled()) {
                 log.debug("SQL: {}, columnNames: {}", querySQL, wrapper.getColumnNames());
             }
