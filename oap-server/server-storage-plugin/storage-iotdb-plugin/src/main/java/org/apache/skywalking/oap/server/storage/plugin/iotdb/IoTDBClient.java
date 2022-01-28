@@ -198,7 +198,7 @@ public class IoTDBClient implements Client, HealthCheckable {
         List<? super StorageData> storageDataList = new ArrayList<>();
         try {
             wrapper = sessionPool.executeQueryStatement(querySQL);
-            log.info("SQL: {}, columnNames: {}", querySQL, wrapper.getColumnNames());
+            log.info("SQL: {}, columnNames: {} ", querySQL, wrapper.getColumnNames());
             if (log.isDebugEnabled()) {
                 log.debug("SQL: {}, columnNames: {}", querySQL, wrapper.getColumnNames());
             }
